@@ -18,6 +18,10 @@ def walk_revctrl(dirname=''):
     """Find all files under revision control"""
     for ep in pkg_resources.iter_entry_points('setuptools.file_finders'):
         for item in ep.load()(dirname):
+            ffile = os.path.join(dirname, item)
+            if not os.path.isfile(ffile):
+                log.warn("misbehaving setuptools file_finder: %s; included a non file: %s" % (ep, ffile))
+                continue
             yield item
 
 
